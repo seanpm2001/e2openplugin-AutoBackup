@@ -128,7 +128,7 @@ class Config(ConfigListScreen, Screen):
 			]
 		ConfigListScreen.__init__(self, configList, session=session, on_change=self.changedEntry)
 		self["key_red"] = Button(_("Cancel"))
-		self["key_green"] = Button(_("OK"))
+		self["key_green"] = Button(_("Save"))
 		self["key_yellow"] = Button(_("Manual"))
 		self["key_blue"] = Button(_("Restore"))
 		self["statusbar"] = Label()
@@ -141,7 +141,7 @@ class Config(ConfigListScreen, Screen):
 			"blue": self.dorestore,
 			"save": self.save,
 			"cancel": self.cancel,
-			"ok": self.save,
+			"ok": self.ok,
 			"menu": self.menu,
 		}, -2)
 		self.onChangedEntry = []
@@ -186,6 +186,12 @@ class Config(ConfigListScreen, Screen):
 
 	def __onClose(self):
 		self.cfgwhere.notifiers.remove(self.changedWhere)
+
+	def ok(self):
+		if hasattr(self, "keySelect"):
+			self.keySelect()
+		else:
+			self.save()
 
 	def save(self):
 		config.plugins.autobackup.where.value = self.cfgwhere.value
